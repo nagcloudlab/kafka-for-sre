@@ -22,3 +22,13 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+kafka1
+kafka2
+kafka3
+kafka-ui
+kafka
+terraform
+venv
+*.lst
+copilot*

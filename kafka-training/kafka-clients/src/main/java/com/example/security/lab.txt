@@ -1,0 +1,64 @@
+kafka-topics --create \
+  --topic payments \
+  --bootstrap-server localhost:9092 \
+  --partitions 3 \
+  --replication-factor 1
+
+
+  # Terminal 1
+  mvn clean compile
+  mvn exec:java -Dexec.mainClass="com.example.security.Demo01_InsecureProducer"
+
+
+  # Terminal 2
+  mvn exec:java -Dexec.mainClass="com.example.security.Demo01_InsecureConsumer"
+  ```
+
+  ---
+
+  ## Expected Output
+
+  **Producer Output:**
+  ```
+  ======================================================================
+  ⚠️  SECURITY RISK: Sending payment WITHOUT encryption
+  ======================================================================
+
+  📤 Sending payment transaction:
+  {
+    "transaction_id" : "TXN20250125001",
+    "from_account" : "1234567890",
+    "amount" : 50000.0,
+    "card_number" : "4532-1234-5678-9010",
+    "cvv" : "123",
+    ...
+  }
+
+  ✅ Sent to:
+     Topic: payments
+     Partition: 1
+     Offset: 0
+
+  ⚠️  WARNING: This data is transmitted in PLAINTEXT!
+  ```
+
+  **Consumer Output:**
+  ```
+  📨 Message 1 received:
+  ⚠️  EXPOSED SENSITIVE DATA:
+     Card Number: 4532-1234-5678-9010
+     CVV: 123
+     ...
+
+----
+
+
+No Encryption: Data travels in plaintext over the network
+No Authentication: Anyone can produce/consume messages
+No Authorization: No access control on topics
+Compliance Risk: Violates PCI-DSS, GDPR, RBI guidelines
+
+
+---
+
+
